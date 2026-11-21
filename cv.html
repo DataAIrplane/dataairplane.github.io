@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CV & parcours · DataAIrplane</title>
+<meta name="description" content="CV interactif de DataAIrplane : compétences en data et IA, expériences et plan de vol des certifications.">
+<meta name="theme-color" content="#070912">
+<meta property="og:title" content="CV & parcours · DataAIrplane">
+<meta property="og:description" content="CV interactif de DataAIrplane : compétences en data et IA, expériences et plan de vol des certifications.">
+<meta property="og:type" content="website">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<canvas id="reseau" aria-hidden="true"></canvas>
+<div class="halo a" aria-hidden="true"></div><div class="halo b" aria-hidden="true"></div><div class="grille" aria-hidden="true"></div>
+<header class="nav">
+  <nav class="nav-in" aria-label="Navigation principale">
+    <a class="logo" href="index.html"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#38e1ff"/><stop offset=".6" stop-color="#8b5cff"/><stop offset="1" stop-color="#ff5fa2"/></linearGradient></defs><path d="M3 15.5L29 4l-6.5 24-7-8.5L3 15.5z" stroke="url(#lg)" stroke-width="2" stroke-linejoin="round"/><path d="M15.5 19.5L29 4" stroke="url(#lg)" stroke-width="2"/><circle cx="29" cy="4" r="2" fill="#38e1ff"/><circle cx="3" cy="15.5" r="2" fill="#8b5cff"/><circle cx="22.5" cy="28" r="2" fill="#ff5fa2"/></svg><span>Data<b>AI</b>rplane</span></a>
+    <button class="burger" aria-label="Ouvrir le menu" aria-expanded="false"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    <ul class="liens">
+      <li><a href="index.html">Accueil</a></li>
+      <li><a href="outils.html">Outils</a></li>
+      <li><a href="cv.html" aria-current="page">CV &amp; parcours</a></li>
+      <li><a href="blog/">Blog <span class="pastille-bientot">bientôt</span></a></li>
+    </ul>
+  </nav>
+</header>
+<main>
+  <div class="conteneur">
+    <section class="cv-hero">
+      <div class="avatar revele" aria-hidden="true"><div class="anneau"></div><div class="initiales"><span id="cv-initiales">DA</span></div></div>
+      <div>
+        <h1 class="revele" id="cv-nom">DataAIrplane</h1>
+        <div class="titre revele" id="cv-titre"><span class="texte"></span><span class="curseur"></span></div>
+        <p class="revele" id="cv-accroche"></p>
+        <div class="contacts revele" id="cv-contacts"></div>
+      </div>
+    </section>
+
+    <section id="competences">
+      <p class="surtitre revele">01 · Compétences</p>
+      <h2 class="revele">Ma boîte à outils</h2>
+      <div class="onglets revele" role="tablist" id="cv-onglets"></div>
+      <div class="jauges revele" id="cv-jauges" role="tabpanel"></div>
+    </section>
+
+    <section id="parcours">
+      <p class="surtitre revele">02 · Plan de vol</p>
+      <h2 class="revele">Parcours de certifications</h2>
+      <p class="sous revele">Chaque balise est une étape d'apprentissage. Clique sur une étape pour voir le détail.</p>
+      <div class="legende revele">
+        <span><i style="background:var(--green)"></i>Obtenue</span>
+        <span><i style="background:var(--amber)"></i>En cours</span>
+        <span><i style="border:2px solid var(--faint)"></i>Prévue</span>
+      </div>
+      <div class="plan-vol" id="cv-plan">
+        <div class="piste"></div><div class="trace"></div>
+        <svg class="avion" viewBox="0 0 24 24" aria-hidden="true"><path fill="#38e1ff" d="M21 16v-2l-8-5V3.5a1.5 1.5 0 00-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z" transform="rotate(180 12 12)"/></svg>
+      </div>
+    </section>
+
+    <section id="experiences">
+      <p class="surtitre revele">03 · Expériences</p>
+      <h2 class="revele">Escales</h2>
+      <div class="experiences" id="cv-experiences"></div>
+    </section>
+  </div>
+</main>
+<footer class="pied">
+  <div class="conteneur">
+    <span>© <span data-annee>2026</span> DataAIrplane · dataairplane.com</span>
+    <span><a href="index.html">Accueil</a> · <a href="outils.html">Outils</a> · <a href="cv.html">CV</a> · <a href="https://github.com/DataAIrplane" target="_blank" rel="noopener">GitHub</a></span>
+  </div>
+</footer>
+<script src="assets/js/donnees.js"></script>
+<script src="assets/js/reseau.js"></script>
+<script src="assets/js/cv.js"></script>
+<script src="assets/js/main.js"></script>
+</body>
+</html>
