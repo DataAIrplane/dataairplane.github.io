@@ -17,7 +17,7 @@
   }
   window.icone = icone;
 
-  var LIBELLES = { "en-ligne": "En ligne", "en-dev": "En développement", bientot: "Bientôt" };
+  var LIBELLES = { "en-ligne": "En ligne", operationnel: "Opérationnel", "en-dev": "En développement", bientot: "Bientôt" };
   function echapper(s) {
     return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
       return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
@@ -41,18 +41,16 @@
   }
   // ---------- Rendu : outils ----------
   function carteOutil(o) {
-    var lien = o.lien
-      ? '<a class="btn principal" href="' + echapper(o.lien) + '" target="_blank" rel="noopener">Ouvrir l\'outil</a>'
-      : '<span class="btn" aria-disabled="true">Outil bientôt en ligne</span>';
-    var article = o.article
-      ? '<a class="btn" href="' + echapper(o.article) + '">Lire l\'article</a>'
-      : '<span class="btn" aria-disabled="true">Article à venir</span>';
+    var pied = "";
+    if (o.page) pied += '<a class="btn principal" href="' + echapper(o.page) + '">Découvrir l\'outil →</a>';
+    else pied += '<span class="btn" aria-disabled="true">Page bientôt en ligne</span>';
+    if (o.code) pied += '<a class="btn" href="' + echapper(o.code) + '" target="_blank" rel="noopener">Code source ↗</a>';
     return (
       '<article class="carte revele">' +
       '<div class="carte-tete"><div class="icone">' + icone(o.icone) + "</div>" +
       '<span class="statut ' + o.statut + '">' + (LIBELLES[o.statut] || "") + "</span></div>" +
       "<h3>" + echapper(o.nom) + "</h3><p>" + echapper(o.description) + "</p>" + tags(o.tags) +
-      '<div class="carte-pied">' + lien + article + "</div></article>"
+      '<div class="carte-pied">' + pied + "</div></article>"
     );
   }
   var fantome = '<div class="carte fantome revele"><span class="plus">+</span><span>Prochain projet en préparation…</span></div>';

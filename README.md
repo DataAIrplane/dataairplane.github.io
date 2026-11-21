@@ -8,6 +8,7 @@ Site principal de DataAIrplane : 100 % statique (HTML, CSS, JS), sans base de do
 |---|---|
 | `index.html` | Accueil : sous-domaines en ligne, aperçu des outils, lien vers le parcours |
 | `outils.html` | Les outils (TorrentToDDL pour commencer) |
+| `outils/torrenttoddl/` | Page de l'outil TorrentToDDL, avec le guide complet et ses schémas |
 | `cv.html` | CV interactif : compétences, plan de vol des certifications, expériences |
 | `blog/` | Emplacement réservé pour le futur blog |
 | `404.html` | Page d'erreur |
@@ -18,10 +19,17 @@ Tout le contenu (sites, outils, compétences, expériences, certifications, lien
 
 ## Tester en local
 
+Le plus simple, sous Windows : clic droit sur `dataairplane-site.zip` → **Extraire tout**, puis double-clic sur `index.html` dans le dossier extrait. Le site s'ouvre dans ton navigateur et tous les liens fonctionnent.
+
+## Modifier la page TorrentToDDL
+
+Le texte vient tel quel de l'article (`sources/torrenttoddl/article.md`). Après une modification de l'article, régénère la page depuis la racine du site :
+
 ```bash
-python3 -m http.server 8000
-# puis ouvrir http://localhost:8000
+node sources/generer-torrenttoddl.mjs
 ```
+
+Le dossier `sources/` sert seulement à fabriquer la page : inutile de l'envoyer sur OVH (il n'est pas dans le zip).
 
 ## Mettre en ligne sur OVH (FTP)
 

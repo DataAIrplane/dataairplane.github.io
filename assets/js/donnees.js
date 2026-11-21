@@ -5,7 +5,7 @@
  * ============================================================
  *
  *  statut possibles :
- *   - sites / outils : "en-ligne" | "en-dev" | "bientot"
+ *   - sites / outils : "en-ligne" | "operationnel" | "en-dev" | "bientot"
  *   - certifications : "obtenue" | "en-cours" | "prevue"
  */
 window.DONNEES = {
@@ -39,11 +39,11 @@ window.DONNEES = {
     {
       nom: "TorrentToDDL",
       description:
-        "Outil qui transforme un lien torrent en lien de téléchargement direct. Présentation détaillée et article de blog à venir.",
-      tags: ["Automatisation", "Web"],
-      statut: "en-dev",
-      lien: "", // URL de l'outil quand il sera en ligne
-      article: "", // URL de l'article de blog
+        "Les *arr cherchent, AllDebrid télécharge, le NAS Synology rapatrie en direct : vos films et séries arrivent tout seuls dans Plex, sans client BitTorrent. Guide d'installation complet.",
+      tags: ["Docker", "AllDebrid", "*arr", "Synology", "Plex"],
+      statut: "operationnel",
+      page: "outils/torrenttoddl/index.html", // page de présentation de l'outil
+      code: "", // URL du dépôt GitHub quand il sera public
       icone: "bolt",
     },
   ],

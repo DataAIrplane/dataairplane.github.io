@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TorrentToDDL · Outil · DataAIrplane</title>
+<meta name="description" content="Le tutoriel complet, de la VM Ubuntu au premier téléchargement importé : les *arr cherchent, AllDebrid télécharge, le NAS Synology rapatrie en direct.">
+<meta name="theme-color" content="#070912">
+<meta property="og:title" content="TorrentToDDL : les *arr, AllDebrid et Plex, sans client BitTorrent">
+<meta property="og:description" content="Le tutoriel complet, de la VM Ubuntu au premier téléchargement importé : les *arr cherchent, AllDebrid télécharge, le NAS Synology rapatrie en direct.">
+<meta property="og:type" content="article">
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body class="page-outil">
+<!-- Page générée par sources/generer-torrenttoddl.mjs : modifier l'article, pas ce fichier. -->
+<div class="lecture" aria-hidden="true"><i></i></div>
+<canvas id="reseau" aria-hidden="true"></canvas>
+<div class="halo a" aria-hidden="true"></div><div class="halo b" aria-hidden="true"></div><div class="grille" aria-hidden="true"></div>
+<header class="nav">
+  <nav class="nav-in" aria-label="Navigation principale">
+    <a class="logo" href="../../index.html"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#38e1ff"/><stop offset=".6" stop-color="#8b5cff"/><stop offset="1" stop-color="#ff5fa2"/></linearGradient></defs><path d="M3 15.5L29 4l-6.5 24-7-8.5L3 15.5z" stroke="url(#lg)" stroke-width="2" stroke-linejoin="round"/><path d="M15.5 19.5L29 4" stroke="url(#lg)" stroke-width="2"/><circle cx="29" cy="4" r="2" fill="#38e1ff"/><circle cx="3" cy="15.5" r="2" fill="#8b5cff"/><circle cx="22.5" cy="28" r="2" fill="#ff5fa2"/></svg><span>Data<b>AI</b>rplane</span></a>
+    <button class="burger" aria-label="Ouvrir le menu" aria-expanded="false"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    <ul class="liens">
+      <li><a href="../../index.html">Accueil</a></li>
+      <li><a href="../../outils.html" aria-current="page">Outils</a></li>
+      <li><a href="../../cv.html">CV &amp; parcours</a></li>
+      <li><a href="../../blog/index.html">Blog <span class="pastille-bientot">bientôt</span></a></li>
+    </ul>
+  </nav>
+</header>
+<main>
+  <div class="conteneur">
+    <section class="outil-hero">
+      <a class="retour revele" href="../../outils.html">← Tous les outils</a>
+      <div class="outil-tete revele">
+        <div class="icone grande"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"/></svg></div>
+        <div>
+          <p class="surtitre">Outil · auto-hébergement</p>
+          <h1>TorrentToDDL</h1>
+        </div>
+      </div>
+      <p class="outil-sous revele">Les *arr, AllDebrid et Plex, sans client BitTorrent</p>
+      <p class="intro revele">Le tutoriel complet, de la VM Ubuntu au premier téléchargement importé : les *arr cherchent, AllDebrid télécharge, le NAS Synology rapatrie en direct.</p>
+      <div class="outil-infos revele">
+        <span class="statut operationnel">Opérationnel</span>
+        <span class="tag">Docker</span><span class="tag">AllDebrid</span><span class="tag">Radarr · Sonarr · Chaptarr</span><span class="tag">Synology</span><span class="tag">Plex</span>
+        <span class="tag">≈ 40 min de lecture</span>
+      </div>
+      <div class="actions revele">
+        <a class="btn principal" href="#guide">Lire le guide ↓</a>
+        <span class="btn" aria-disabled="true">Code source bientôt sur GitHub</span>
+      </div>
+    </section>
+
+    <div class="outil-corps" id="guide">
+      <aside class="sommaire-lateral" aria-label="Sections">
+        <p>Sections</p>
+        <ol>
+          <li><a href="#sommaire">Sommaire</a></li>
+          <li><a href="#ce-que-vous-obtenez">Ce que vous obtenez</a></li>
+          <li><a href="#et-la-legalite">Et la légalité ?</a></li>
+          <li><a href="#la-famille-arr-en-deux-minutes">La famille *arr en deux minutes</a></li>
+          <li><a href="#pourquoi-passer-par-alldebrid">Pourquoi passer par AllDebrid</a></li>
+          <li><a href="#comment-ca-marche">Comment ça marche</a></li>
+          <li><a href="#ce-quil-vous-faut">Ce qu'il vous faut</a></li>
+          <li><a href="#1-preparer-le-nas">1. Préparer le NAS</a></li>
+          <li><a href="#2-creer-la-vm-ubuntu">2. Créer la VM Ubuntu</a></li>
+          <li><a href="#3-monter-les-dossiers-du-nas">3. Monter les dossiers du NAS</a></li>
+          <li><a href="#4-installer-prowlarr-radarr-et-sonarr">4. Installer Prowlarr, Radarr et Sonarr</a></li>
+          <li><a href="#5-installer-docker">5. Installer Docker</a></li>
+          <li><a href="#6-installer-chaptarr">6. Installer Chaptarr</a></li>
+          <li><a href="#7-installer-torrenttoddl">7. Installer TorrentToDDL</a></li>
+          <li><a href="#8-configurer-prowlarr-et-les-indexeurs">8. Configurer Prowlarr et les indexeurs</a></li>
+          <li><a href="#9-configurer-radarr-sonarr-et-chaptarr">9. Configurer Radarr, Sonarr et Chaptarr</a></li>
+          <li><a href="#10-brancher-download-station">10. Brancher Download Station</a></li>
+          <li><a href="#11-le-premier-test-de-bout-en-bout">11. Le premier test, de bout en bout</a></li>
+          <li><a href="#au-quotidien">Au quotidien</a></li>
+          <li><a href="#depannage">Dépannage</a></li>
+          <li><a href="#limites-et-alternatives">Limites et alternatives</a></li>
+          <li><a href="#sous-le-capot">Sous le capot</a></li>
+        </ol>
+      </aside>
+      <article class="prose">
+<figure><img src="images/banniere.svg" alt="Vous ajoutez un film depuis votre téléphone ; les *arr le cherchent, AllDebrid le télécharge, le NAS le rapatrie, et il apparaît dans Plex" loading="lazy"><figcaption>Vous ajoutez un film depuis votre téléphone ; les *arr le cherchent, AllDebrid le télécharge, le NAS le rapatrie, et il apparaît dans Plex</figcaption></figure>
+<p>Tout est parti d'une envie très simple : <strong>allumer la télévision le soir, ouvrir Plex, et trouver déjà là les nouveaux épisodes de mes séries et les films que j'attendais</strong>, avec leur affiche et leur résumé, prêts à regarder. Sans avoir rien cherché, rien lancé, rien renommé : juste appuyer sur Lecture.</p>
+<figure><img src="images/plex-matin.svg" alt="Illustration : la page d'accueil de Plex remplie toute seule, avec les films ajoutés récemment et les nouveaux épisodes" loading="lazy"><figcaption>Illustration : la page d'accueil de Plex remplie toute seule, avec les films ajoutés récemment et les nouveaux épisodes</figcaption></figure>
+<p>Radarr pour les films, Sonarr pour les séries, Chaptarr pour les livres audio et les ebooks : ces trois outils savent tout faire. Ils surveillent ce que vous voulez, cherchent la bonne version, renomment les fichiers et les rangent dans la médiathèque. Il leur manque une seule chose : quelqu'un pour télécharger.</p>
+<p>D'habitude, c'est un client BitTorrent (qBittorrent, Transmission…) qui tourne en permanence à la maison, échange des morceaux de fichiers avec des inconnus et occupe la connexion. Je voulais aussi m'en passer. J'avais déjà deux outils sous la main :</p>
+<ul><li><strong>AllDebrid</strong>, un service de « débridage » : on lui confie un torrent, il le télécharge sur ses propres serveurs, souvent en quelques secondes, et le rend disponible en téléchargement direct ;</li><li><strong>Download Station</strong>, le gestionnaire de téléchargements de mon NAS Synology, qui sait lire un flux RSS et télécharger tous les liens qui y apparaissent.</li></ul>
+<p>Il manquait le chaînon entre les deux. Je l'ai écrit : <strong>TorrentToDDL</strong> (<em>torrent to direct download link</em>), un petit service qui récupère les torrents choisis par les *arr, les confie à AllDebrid et publie les liens directs dans un flux RSS pour Download Station.</p>
+<p>Chez moi, tout tourne sur un NAS Synology : Download Station, Plex, et une machine virtuelle Ubuntu qui héberge les *arr et TorrentToDDL. Ce n'est pas une obligation. Les *arr et TorrentToDDL tournent sur n'importe quelle machine Linux de la maison (mini-PC, Raspberry Pi, autre NAS avec Docker). Seul Download Station demande un Synology, et la section <a href="#limites-et-alternatives">Limites et alternatives</a> dit quoi utiliser sans.</p>
+<p>Cet article décrit toute l'installation, de la machine virtuelle vide au premier téléchargement importé dans la médiathèque, avec chaque commande, chaque réglage et ce qu'il doit afficher. Comptez une après-midi.</p>
+<blockquote><p><strong>Avant de commencer.</strong> Cet outil sert à automatiser des téléchargements <strong>légaux</strong>. Lisez la section <a href="#et-la-legalite">Et la légalité ?</a> avant d'aller plus loin.</p></blockquote>
+<h2 id="sommaire">Sommaire</h2>
+<ol><li><a href="#ce-que-vous-obtenez">Ce que vous obtenez</a></li><li><a href="#et-la-legalite">Et la légalité ?</a></li><li><a href="#la-famille-arr-en-deux-minutes">La famille *arr en deux minutes</a></li><li><a href="#pourquoi-passer-par-alldebrid">Pourquoi passer par AllDebrid</a></li><li><a href="#comment-ca-marche">Comment ça marche</a></li><li><a href="#ce-quil-vous-faut">Ce qu'il vous faut</a></li><li><a href="#1-preparer-le-nas">Préparer le NAS</a></li><li><a href="#2-creer-la-vm-ubuntu">Créer la VM Ubuntu</a></li><li><a href="#3-monter-les-dossiers-du-nas">Monter les dossiers du NAS</a></li><li><a href="#4-installer-prowlarr-radarr-et-sonarr">Installer Prowlarr, Radarr et Sonarr</a></li><li><a href="#5-installer-docker">Installer Docker</a></li><li><a href="#6-installer-chaptarr">Installer Chaptarr</a></li><li><a href="#7-installer-torrenttoddl">Installer TorrentToDDL</a></li><li><a href="#8-configurer-prowlarr-et-les-indexeurs">Configurer Prowlarr et les indexeurs</a></li><li><a href="#9-configurer-radarr-sonarr-et-chaptarr">Configurer Radarr, Sonarr et Chaptarr</a></li><li><a href="#10-brancher-download-station">Brancher Download Station</a></li><li><a href="#11-le-premier-test-de-bout-en-bout">Le premier test, de bout en bout</a></li><li><a href="#au-quotidien">Au quotidien</a></li><li><a href="#depannage">Dépannage</a></li><li><a href="#limites-et-alternatives">Limites et alternatives</a></li></ol>
+<hr>
+<h2 id="ce-que-vous-obtenez">Ce que vous obtenez</h2>
+<p>À la fin de ce tutoriel, votre médiathèque vit toute seule :</p>
+<ul><li><strong>Une médiathèque qui se remplit sans vous.</strong> Vous ajoutez un film, une série ou un auteur dans l'*arr concerné ; il trouve une version, la fait télécharger, la renomme et la range. Quelques minutes plus tard, films et épisodes apparaissent dans <strong>Plex</strong>, avec leur affiche et leur résumé, sur la télévision, le téléphone ou l'ordinateur. Les livres arrivent de la même façon dans leur dossier.</li><li><strong>Ce qui n'est pas encore sorti arrive tout seul.</strong> Ajoutez dès aujourd'hui un film annoncé pour dans six mois, ou une série dont la saison suivante n'est pas commencée : l'*arr la surveille, et la télécharge dès qu'une version est disponible. Pour une série en cours de diffusion, chaque nouvel épisode arrive sans que vous y pensiez.</li><li><strong>Un suivi complet.</strong> Radarr, Sonarr et Chaptarr savent ce que vous avez, ce qui manque, et ce qui va sortir, avec un <strong>calendrier</strong> des prochaines sorties. Plex, de son côté, retient ce que vous avez <strong>vu</strong> : il marque les épisodes regardés, reprend un film là où vous l'avez arrêté, et propose l'épisode suivant.</li><li><strong>Tout depuis le téléphone.</strong> Avec l'application nzb360, vous ajoutez un film depuis le canapé, et il arrive dans Plex sans autre geste de votre part.</li><li><strong>De la qualité choisie une fois pour toutes.</strong> 1080p ou 4K, version française ou multilingue : vous réglez vos préférences une fois, et l'*arr remplace même un fichier par une meilleure version quand elle paraît.</li><li><strong>Rien à surveiller.</strong> Pas de client BitTorrent à garder allumé, pas de port ouvert sur la box : le NAS fait le travail, même quand votre ordinateur est éteint.</li></ul>
+<figure><img src="images/calendrier.svg" alt="Une semaine dans le calendrier des *arr : ce qui est sorti est téléchargé, ce qui va sortir est surveillé" loading="lazy"><figcaption>Une semaine dans le calendrier des *arr : ce qui est sorti est téléchargé, ce qui va sortir est surveillé</figcaption></figure>
+<hr>
+<h2 id="et-la-legalite">Et la légalité ?</h2>
+<p>Soyons clairs : <strong>ce montage ne doit pas servir au piratage.</strong></p>
+<p>Les technologies utilisées ici sont légales. BitTorrent est un simple protocole d'échange de fichiers, utilisé tous les jours pour distribuer des systèmes d'exploitation, des jeux ou des mises à jour. Le téléchargement direct est la façon la plus banale de récupérer un fichier sur Internet. AllDebrid est un service commercial légal, et les *arr sont des logiciels libres. Ce qui peut être illégal, c'est <strong>ce que vous téléchargez</strong>.</p>
+<p>En France, comme dans la plupart des pays, télécharger une œuvre protégée (film, série, livre, musique) sans l'autorisation de ses ayants droit est de la contrefaçon, que ce soit par BitTorrent, par téléchargement direct ou par un service de débridage. Passer par AllDebrid change <strong>le chemin</strong> des fichiers, pas leur statut juridique : qu'une adresse IP n'apparaisse pas dans l'essaim ne rend pas légal un téléchargement qui ne l'est pas.</p>
+<p>Ce que vous pouvez télécharger en toute légalité, par exemple :</p>
+<ul><li>les <strong>distributions Linux</strong> et logiciels libres, souvent distribués par torrent : Ubuntu, Debian, Fedora…</li><li>les <strong>films libres de droits</strong> : les films du Blender Institute (<em>Big Buck Bunny</em>, <em>Sintel</em>, <em>Tears of Steel</em>), les œuvres du domaine public diffusées par Internet Archive ;</li><li>les <strong>livres audio du domaine public</strong>, comme ceux de LibriVox, et les ebooks du projet Gutenberg ;</li><li>les œuvres sous <strong>licence Creative Commons</strong>, et les contenus dont vous détenez les droits.</li></ul>
+<p>Je ne suis pas juriste : en cas de doute sur une œuvre, renseignez-vous avant de la télécharger. Le choix de vos indexeurs, et de ce que vous en faites, relève de votre seule responsabilité.</p>
+<hr>
+<h2 id="la-famille-arr-en-deux-minutes">La famille *arr en deux minutes</h2>
+<p>Les « *arr » sont une famille de logiciels libres qui automatisent une médiathèque. Ils partagent la même interface et la même logique : vous leur dites ce que vous voulez, ils s'occupent du reste.</p>
+<div class="tableau"><table><thead><tr><th>Outil</th><th>Rôle</th><th>Dans cet article</th></tr></thead><tbody><tr><td><strong>Prowlarr</strong></td><td>gère les <strong>indexeurs</strong>, les sites où l'on cherche les torrents, à un seul endroit, et les transmet aux autres</td><td>oui</td></tr><tr><td><strong>Radarr</strong></td><td>les <strong>films</strong> : il surveille ceux que vous avez demandés, cherche et choisit une version, puis renomme et range le fichier</td><td>oui</td></tr><tr><td><strong>Sonarr</strong></td><td>les <strong>séries et les animés</strong> : pareil, épisode par épisode ou saison par saison, y compris les épisodes à venir</td><td>oui</td></tr><tr><td><strong>Chaptarr</strong></td><td>les <strong>livres audio et les ebooks</strong>, auteur par auteur. C'est la suite de Readarr, abandonné en 2025</td><td>oui</td></tr><tr><td>Lidarr</td><td>la musique</td><td>non, mais il s'installe et se règle de la même façon</td></tr><tr><td>Bazarr</td><td>les sous-titres, en complément de Radarr et Sonarr</td><td>non</td></tr><tr><td>Overseerr, Jellyseerr</td><td>une jolie page pour demander des films ou des séries, à partager avec la famille</td><td>non</td></tr></tbody></table></div>
+<p>Radarr, Sonarr et Chaptarr font <strong>exactement le même travail</strong>, chacun pour un type de média. Tout ce que cet article dit de l'un vaut pour les deux autres. Quand je parle de « l'*arr », c'est l'un des trois.</p>
+<p>Ce que les *arr ne font pas, c'est télécharger. Pour ça, ils passent par un <strong>client de téléchargement</strong>. Ici, ce sera TorrentToDDL, avec AllDebrid et Download Station.</p>
+<hr>
+<h2 id="pourquoi-passer-par-alldebrid">Pourquoi passer par AllDebrid</h2>
+<p>Avec un client BitTorrent classique, votre machine rejoint l'<strong>essaim</strong> : l'ensemble des ordinateurs qui possèdent des morceaux du fichier. Elle télécharge des morceaux chez les autres et, en échange, envoie ceux qu'elle a déjà. C'est le principe même de BitTorrent : chacun partage ce qu'il reçoit.</p>
+<p>Avec TorrentToDDL, <strong>votre connexion ne rejoint jamais l'essaim</strong>. C'est AllDebrid qui joue le rôle de participant : ses serveurs échangent avec les autres pairs, assemblent le fichier, puis vous le servent comme un téléchargement ordinaire. Chez vous, il n'y a qu'un téléchargement direct en HTTPS, comme n'importe quel fichier sur un site web.</p>
+<div class="tableau"><table><thead><tr><th></th><th>Client BitTorrent à la maison</th><th>TorrentToDDL et AllDebrid</th></tr></thead><tbody><tr><td>Qui échange avec l'essaim</td><td>votre machine</td><td>les serveurs d'AllDebrid</td></tr><tr><td>Ce qui passe par votre connexion</td><td>des échanges BitTorrent, dans les deux sens</td><td>un téléchargement direct</td></tr><tr><td>Envoi depuis chez vous</td><td>oui, souvent autant que le téléchargement</td><td>non</td></tr><tr><td>Logiciel à faire tourner en permanence</td><td>le client BitTorrent</td><td>rien de plus que le NAS</td></tr><tr><td>Port à ouvrir sur la box</td><td>souvent, pour de bonnes performances</td><td>aucun</td></tr><tr><td>Vitesse</td><td>celle de l'essaim</td><td>souvent quasi immédiate : AllDebrid a déjà en cache la plupart des torrents connus</td></tr></tbody></table></div>
+<p><strong>La contrepartie</strong> : vous dépendez d'AllDebrid, un service payant, et vous ne rendez rien à l'essaim. Ceux qui tiennent à l'esprit du partage peuvent continuer à faire tourner un client BitTorrent à côté.</p>
+<hr>
+<h2 id="comment-ca-marche">Comment ça marche</h2>
+<h3 id="larchitecture">L'architecture</h3>
+<figure><img src="images/architecture.svg" alt="Architecture : le NAS Synology héberge Download Station et une VM Ubuntu avec les *arr et TorrentToDDL" loading="lazy"><figcaption>Architecture : le NAS Synology héberge Download Station et une VM Ubuntu avec les *arr et TorrentToDDL</figcaption></figure>
+<p>Tout tient dans un NAS Synology :</p>
+<ul><li><strong>Download Station</strong> et, si vous l'utilisez, <strong>Plex</strong>, tournent directement sur le NAS ;</li><li>une <strong>VM Ubuntu</strong>, créée avec Virtual Machine Manager, fait tourner Prowlarr, Radarr et Sonarr, ainsi que Chaptarr et TorrentToDDL dans Docker ;</li><li>les fichiers vivent dans deux <strong>dossiers partagés</strong> du NAS, que la VM monte en NFS : <code>Multimedia</code> pour la médiathèque, <code>TorrentToDDL</code> pour les échanges entre les *arr et Download Station.</li></ul>
+<p>La VM n'a pas besoin du NAS : n'importe quelle machine Linux de votre réseau fait l'affaire. En revanche, Download Station n'existe que sur Synology. Si vous n'en avez pas, voyez <a href="#limites-et-alternatives">les alternatives</a>.</p>
+<h3 id="le-parcours-dun-telechargement">Le parcours d'un téléchargement</h3>
+<figure><img src="images/parcours.svg" alt="Le parcours d'un téléchargement en sept étapes, de la recherche à la médiathèque" loading="lazy"><figcaption>Le parcours d'un téléchargement en sept étapes, de la recherche à la médiathèque</figcaption></figure>
+<p>Le point clé est l'étape 2 : l'*arr ne parle pas à TorrentToDDL. Il utilise un client de téléchargement prévu de longue date, <strong>Torrent Blackhole</strong> (« trou noir »), qui se contente de déposer le fichier <code>.torrent</code> dans un dossier, puis surveille un autre dossier où le résultat finira par arriver. TorrentToDDL fait tout le travail entre les deux. Radarr, Sonarr et Chaptarr ont chacun ce client, et on les règle tous les trois de la même façon.</p>
+<h3 id="les-etats-dun-torrent">Les états d'un torrent</h3>
+<p>Chaque torrent est suivi dans une petite base de données, et affiché sur une page d'état :</p>
+<figure><img src="images/etats.svg" alt="Les états d'un torrent : reçu, sur AllDebrid, dans le flux RSS, terminé, avec les cas d'erreur, de refus et d'abandon" loading="lazy"><figcaption>Les états d'un torrent : reçu, sur AllDebrid, dans le flux RSS, terminé, avec les cas d'erreur, de refus et d'abandon</figcaption></figure>
+<p>Deux règles méritent d'être retenues :</p>
+<ul><li><strong>les liens restent 2 jours dans le flux RSS</strong>, le temps que Download Station les télécharge. Ensuite, le torrent est supprimé d'AllDebrid ;</li><li><strong>un torrent qui reste en erreur plus d'un jour est abandonné</strong>, par exemple parce que plus personne ne le partage. TorrentToDDL prévient alors l'*arr qui l'avait demandé, qui le met sur liste noire et cherche une autre version tout seul.</li></ul>
+<hr>
+<h2 id="ce-quil-vous-faut">Ce qu'il vous faut</h2>
+<p><strong>Le matériel</strong></p>
+<ul><li>un NAS Synology sous DSM 7, compatible avec Virtual Machine Manager, avec au moins 4 Go de mémoire libres pour la VM ;</li><li>ou, à défaut, n'importe quelle machine Linux (mini-PC, Raspberry Pi 4 ou 5…) en plus du NAS pour Download Station.</li></ul>
+<p><strong>Les comptes</strong></p>
+<ul><li>un abonnement <strong>AllDebrid</strong>, et sa clé API (alldebrid.com &gt; Mon compte &gt; Clés API).</li></ul>
+<p><strong>Les connaissances</strong></p>
+<ul><li>savoir ouvrir une session SSH (avec PuTTY, MobaXterm, ou le terminal de Windows) et copier-coller des commandes.</li></ul>
+<p><strong>Les valeurs à adapter</strong></p>
+<p>Tout au long de l'article, j'utilise ces adresses d'exemple. Remplacez-les par les vôtres :</p>
+<div class="tableau"><table><thead><tr><th>Quoi</th><th>Exemple</th><th>Chez vous</th></tr></thead><tbody><tr><td>Réseau local</td><td><code>192.168.1.0/24</code></td><td>souvent <code>192.168.0.0/24</code> ou <code>192.168.1.0/24</code></td></tr><tr><td>NAS</td><td><code>192.168.1.10</code></td><td>l'adresse de votre NAS</td></tr><tr><td>VM</td><td><code>192.168.1.20</code></td><td>l'adresse que vous réserverez à la VM</td></tr><tr><td>Utilisateur de la VM</td><td><code>admin</code></td><td>celui que vous créerez à l'installation</td></tr></tbody></table></div>
+<hr>
+<h2 id="1-preparer-le-nas">1. Préparer le NAS</h2>
+<h3 id="11-les-dossiers-partages">1.1 Les dossiers partagés</h3>
+<p>Dans DSM : <strong>Panneau de configuration &gt; Dossier partagé &gt; Créer</strong>. Créez deux dossiers partagés :</p>
+<div class="tableau"><table><thead><tr><th>Dossier partagé</th><th>Sous-dossiers à créer (avec File Station)</th><th>Rôle</th></tr></thead><tbody><tr><td><code>Multimedia</code></td><td><code>Films</code>, <code>Series</code>, <code>Animes</code>, <code>Audiobook</code>, <code>Ebook</code></td><td>la médiathèque, rangée par les *arr</td></tr><tr><td><code>TorrentToDDL</code></td><td><code>Torrents</code>, <code>Downloaded</code></td><td>les <code>.torrent</code> déposés par les *arr, et les fichiers rapatriés par Download Station</td></tr></tbody></table></div>
+<p>Si vous avez déjà une médiathèque, gardez vos dossiers : il suffira d'adapter les chemins dans la suite.</p>
+<h3 id="12-activer-nfs">1.2 Activer NFS</h3>
+<p><strong>Panneau de configuration &gt; Services de fichiers &gt; NFS</strong> : cochez <strong>Activer le service NFS</strong>, puis <strong>Appliquer</strong>.</p>
+<h3 id="13-autoriser-la-vm">1.3 Autoriser la VM</h3>
+<p>Pour <strong>chacun</strong> des deux dossiers partagés : <strong>Panneau de configuration &gt; Dossier partagé &gt;</strong> sélectionnez le dossier <strong>&gt; Modifier &gt; Autorisations NFS &gt; Créer</strong> :</p>
+<div class="tableau"><table><thead><tr><th>Réglage</th><th>Valeur</th></tr></thead><tbody><tr><td>Nom d'hôte ou IP</td><td><code>192.168.1.20</code> (l'adresse de la future VM)</td></tr><tr><td>Privilège</td><td>Lecture/Écriture</td></tr><tr><td>Squash</td><td><strong>Mapper tous les utilisateurs sur admin</strong></td></tr><tr><td>Sécurité</td><td>sys</td></tr></tbody></table></div>
+<blockquote><p><strong>Pourquoi « Mapper tous les utilisateurs sur admin » ?</strong> Sur la VM, Radarr, Sonarr, Chaptarr et TorrentToDDL tournent chacun sous un utilisateur différent. Avec ce réglage, le NAS les traite tous comme un seul utilisateur : plus aucun problème de droits entre eux.</p></blockquote>
+<h3 id="14-installer-download-station">1.4 Installer Download Station</h3>
+<p><strong>Centre de paquets &gt; Download Station &gt; Installer</strong>. On le branchera à l'étape 10.</p>
+<hr>
+<h2 id="2-creer-la-vm-ubuntu">2. Créer la VM Ubuntu</h2>
+<h3 id="21-la-machine-virtuelle">2.1 La machine virtuelle</h3>
+<ol><li>Téléchargez l'image d'<strong>Ubuntu Server 26.04 LTS</strong> sur ubuntu.com, et copiez-la sur le NAS.</li><li><strong>Virtual Machine Manager &gt; Machine virtuelle &gt; Créer &gt; Linux</strong> :<ul><li>2 processeurs, 4 Go de mémoire ;</li><li>un disque de 32 Go ;</li><li>le réseau par défaut (<em>Default VM Network</em>) ;</li><li>l'image ISO d'Ubuntu au démarrage.</li></ul></li><li>Démarrez la VM et ouvrez sa console.</li></ol>
+<h3 id="22-linstallation-dubuntu">2.2 L'installation d'Ubuntu</h3>
+<p>Suivez l'installateur avec les choix par défaut, sauf :</p>
+<ul><li><strong>Profil</strong> : choisissez votre nom d'utilisateur (dans cet article, <code>admin</code>) et un mot de passe solide ;</li><li><strong>SSH</strong> : cochez <strong>Install OpenSSH server</strong>.</li></ul>
+<p>À la fin, redémarrez la VM et connectez-vous dans la console.</p>
+<h3 id="23-une-adresse-fixe">2.3 Une adresse fixe</h3>
+<p>Relevez l'adresse de la VM :</p>
+<pre data-langue="bash"><button class="copier" type="button">Copier</button><code>ip -br -4 addr</code></pre>
+<p><strong>Résultat attendu</strong> : une ligne comme <code>enp3s0  UP  192.168.1.20/24</code>.</p>
+<p>Dans l'interface de votre box, section DHCP, <strong>réservez cette adresse</strong> pour la VM : elle la gardera après chaque redémarrage. Si cette adresse n'est pas <code>192.168.1.20</code>, celle que vous avez autorisée à l'étape 1.3, retournez dans les autorisations NFS des deux dossiers partagés et remplacez-la. Sinon, le NAS refusera les montages de l'étape 3.</p>
+<p>À partir d'ici, connectez-vous en SSH depuis votre PC : <code>ssh admin@192.168.1.20</code>.</p>
+<h3 id="24-mises-a-jour-et-fuseau-horaire">2.4 Mises à jour et fuseau horaire</h3>
+<pre data-langue="bash"><button class="copier" type="button">Copier</button><code>sudo apt update &amp;&amp; sudo apt full-upgrade -y &amp;&amp; sudo timedatectl set-timezone Europe/Paris</code></pre>
+<h3 id="25-le-pare-feu">2.5 Le pare-feu</h3>
+<p>On n'autorise que le réseau local, et on autorise SSH <strong>avant</strong> d'activer le pare-feu : sinon, la session en cours est coupée.</p>
+<pre data-langue="bash"><button class="copier" type="button">Copier</button><code>sudo ufw allow from 192.168.1.0/24 to any port 22 proto tcp &amp;&amp; sudo ufw --force enable &amp;&amp; sudo ufw status</code></pre>
+<p><strong>Résultat attendu</strong> :</p>
+<pre data-langue=""><button class="copier" type="button">Copier</button><code>Status: active
+
+To                         Action      From
+--                         ------      ----
+22/tcp                     ALLOW       192.168.1.0/24</code></pre>
+<hr>
+<h2 id="3-monter-les-dossiers-du-nas">3. Monter les dossiers du NAS</h2>
+<p>On monte chaque dossier partagé une seule fois, sous <code>/mnt/nas</code> :</p>
+<pre data-langue="bash"><button class="copier" type="button">Copier</button><code>sudo apt install -y nfs-common &amp;&amp; sudo mkdir -p /mnt/nas/Multimedia /mnt/nas/TorrentToDDL</code></pre>
+<p>Ouvrez le fichier des montages :</p>
+<pre data-langue="bash"><button class="copier" type="button">Copier</button><code>sudo nano /etc/fstab</code></pre>
+<p>Ajoutez ces deux lignes à la fin, avec l'adresse de votre NAS :</p>
+<pre data-langue=""><button class="copier" type="button">Copier</button><code>192.168.1.10:/volume1/Multimedia     /mnt/nas/Multimedia     nfs  rw,hard,nolock,_netdev,nofail  0  0
+192.168.1.10:/volume1/TorrentToDDL   /mnt/nas/TorrentToDDL   nfs  rw,hard,nolock,_netdev,nofail  0  0</code></pre>
+<p>Enregistrez (Ctrl+O, Entrée) et quittez (Ctrl+X).</p>
+<p>Ce que font les options de montage :</p>
+<div class="tableau"><table><thead><tr><th>Option</th><th>Ce qu'elle fait</th></tr></thead><tbody><tr><td><code>rw</code></td><td>lecture et écriture</td></tr><tr><td><code>hard</code></td><td>si le partage ne répond plus un instant, la VM attend son retour au lieu de renvoyer une erreur</td></tr><tr><td><code>nolock</code></td><td>pas de verrouillage des fichiers par le réseau, inutile ici</td></tr><tr><td><code>_netdev</code></td><td>attendre que le réseau de la VM soit prêt avant de monter le dossier</td></tr><tr><td><code>nofail</code></td><td>si le partage n'est pas encore disponible au démarrage de la VM (le NAS vient de redémarrer et son service NFS n'est pas prêt), la VM démarre quand même au lieu de rester bloquée. Il suffit ensuite de lancer <code>sudo mount -a</code></td></tr></tbody></table></div>
+<p>Montez-les et vérifiez :</p>
+<pre data-langue="bash"><button class="copier" type="button">Copier</button><code>sudo systemctl daemon-reload &amp;&amp; sudo mount -a &amp;&amp; ls /mnt/nas/Multimedia /mnt/nas/TorrentToDDL</code></pre>
+<p><strong>Résultat attendu</strong> :</p>
+<pre data-langue=""><button class="copier" type="button">Copier</button><code>/mnt/nas/Multimedia:
+Animes  Audiobook  Ebook  Films  Series
+
+/mnt/nas/TorrentToDDL:
+Downloaded  Torrents</code></pre>
+<p>Vérifiez enfin que vous pouvez écrire dans le dossier des torrents :</p>
+<pre data-langue="bash"><button class="copier" type="button">Copier</button><code>touch /mnt/nas/TorrentToDDL/Torrents/test &amp;&amp; rm /mnt/nas/TorrentToDDL/Torrents/test &amp;&amp; echo &quot;Écriture OK&quot;</code></pre>
+<p><strong>Résultat attendu</strong> : <code>Écriture OK</code>. Si vous voyez <code>Permission denied</code>, c'est que le NAS refuse d'écrire pour la VM. Retournez dans les autorisations NFS des deux dossiers partagés (étape 1.3) et vérifiez que <strong>Squash</strong> vaut bien <strong>Mapper tous les utilisateurs sur admin</strong>.</p>
+<blockquote><p>Votre volume n'est pas forcément <code>volume1</code>. Le chemin exact est indiqué dans <strong>Panneau de configuration &gt; Dossier partagé &gt;</strong> votre dossier <strong>&gt; Modifier &gt; Autorisations NFS</strong>, en bas de la fenêtre.</p></blockquote>
+<hr>
+<h2 id="4-installer-prowlarr-radarr-et-sonarr">4. Installer Prowlarr, Radarr et Sonarr</h2>
+<p>Les trois s'installent de la même façon : on télécharge la version officielle, on crée un utilisateur dédié, et on déclare un service qui démarre avec la machine. La fonction suivante fait tout ; collez-la telle quelle dans le terminal, elle ne fait rien tant qu'on ne l'appelle pas.</p>
+<pre data-langue="bash"><button class="copier" type="button">Copier</button><code>installer_arr() {
+  local app=&quot;$1&quot; App=&quot;$2&quot; url=&quot;$3&quot;
+  sudo groupadd -f media
+  sudo useradd --system --no-create-home --shell /usr/sbin/nologin --gid media &quot;$app&quot;
+  sudo mkdir -p &quot;/var/lib/$app&quot; &amp;&amp; sudo chown &quot;$app:media&quot; &quot;/var/lib/$app&quot;
+  cd /tmp &amp;&amp; wget -q --content-disposition &quot;$url&quot;
+  tar -xzf ${App}*.linux*.tar.gz &amp;&amp; sudo mv &quot;$App&quot; /opt/ &amp;&amp; rm ${App}*.linux*.tar.gz
+  sudo chown -R &quot;$app:media&quot; &quot;/opt/$App&quot;
+  sudo tee &quot;/etc/systemd/system/$app.service&quot; &gt; /dev/null &lt;&lt;EOF
+[Unit]
+Description=$App
+After=network-online.target remote-fs.target
+
+[Service]
+User=$app
+Group=media
+UMask=0002
+ExecStart=/opt/$App/$App -nobrowser -data=/var/lib/$app/
+Restart=on-failure
+TimeoutStopSec=20
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target
+EOF
+  sudo systemctl daemon-reload &amp;&amp; sudo systemctl enable --now &quot;$app&quot;
+  cd ~
+}</code></pre>
+<p>Puis installez les trois :</p>
+<pre data-langue="bash"><button class="copier" type="button">Copier</button><code>sudo apt install -y curl wget sqlite3
+installer_arr prowlarr Prowlarr 'https://prowlarr.servarr.com/v1/update/master/updatefile?os=linux&amp;runtime=netcore&amp;arch=x64'
+installer_arr radarr   Radarr   'https://radarr.servarr.com/v1/update/master/updatefile?os=linux&amp;runtime=netcore&amp;arch=x64'
+installer_arr sonarr   Sonarr   'https://services.sonarr.tv/v1/download/main/latest?version=4&amp;os=linux&amp;arch=x64'</code></pre>
+<p>Sur un processeur ARM (Raspberry Pi), remplacez <code>x64</code> par <code>arm64</code> dans les trois adresses.</p>
+<p>Vérifiez qu'ils tournent :</p>
+<pre data-langue="bash"><button class="copier" type="button">Copier</button><code>systemctl is-active prowlarr radarr sonarr</code></pre>
+<p><strong>Résultat attendu</strong> : trois lignes <code>active</code>.</p>
+<p>Ouvrez leurs ports au réseau local :</p>
+<pre data-langue="bash"><button class="copier" type="button">Copier</button><code>sudo ufw allow from 192.168.1.0/24 to any port 9696,7878,8989 proto tcp</code></pre>
+<div class="tableau"><table><thead><tr><th>Application</th><th>Adresse</th></tr></thead><tbody><tr><td>Prowlarr</td><td><code>http://192.168.1.20:9696</code></td></tr><tr><td>Radarr</td><td><code>http://192.168.1.20:7878</code></td></tr><tr><td>Sonarr</td><td><code>http://192.168.1.20:8989</code></td></tr></tbody></table></div>
+<p>À la première visite, Radarr, Sonarr et Prowlarr vous demandent de créer un identifiant : choisissez <strong>Forms (Login Page)</strong>, un nom et un mot de passe. Si l'un d'eux ne le demande pas, faites-le dans <strong>Settings &gt; General &gt; Security &gt; Authentication</strong>. On les configure aux étapes 8 et 9.</p>
+<hr>
+<h2 id="5-installer-docker">5. Installer Docker</h2>
+<p>Chaptarr et TorrentToDDL tournent dans Docker. On l'installe depuis le dépôt officiel :</p>
+<pre data-langue="bash"><button class="copier" type="button">Copier</button><code>sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+echo &quot;deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release &amp;&amp; echo &quot;$VERSION_CODENAME&quot;) stable&quot; | sudo tee /etc/apt/sources.list.d/docker.list &gt; /dev/null
+sudo apt update &amp;&amp; sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin</code></pre>
+<p>Pour utiliser Docker sans <code>sudo</code>, ajoutez-vous au groupe <code>docker</code>, puis <strong>déconnectez-vous et reconnectez-vous</strong> :</p>
+<pre data-langue="bash"><button class="copier" type="button">Copier</button><code>sudo usermod -aG docker $USER</code></pre>
+<p>Après reconnexion, vérifiez :</p>
+<pre data-langue="bash"><button class="copier" type="button">Copier</button><code>docker run --rm hello-world</code></pre>
+<p><strong>Résultat attendu</strong> : un message qui commence par <code>Hello from Docker!</code>.</p>
+<blockquote><p><strong>Bon à savoir.</strong> Un port publié par Docker passe à côté du pare-feu : il est joignable depuis le réseau même sans règle <code>ufw</code>. Ici, c'est sans conséquence, tout reste sur votre réseau local. Mais n'ouvrez jamais ces ports sur Internet depuis votre box.</p></blockquote>
+<p><strong>Votre identifiant.</strong> Chaptarr et TorrentToDDL doivent créer leurs fichiers sous votre utilisateur, et non sous <code>root</code>. Relevez votre identifiant d'utilisateur et de groupe :</p>
+<pre data-langue="bash"><button class="copier" type="button">Copier</button><code>id</code></pre>
+<p><strong>Résultat attendu</strong> : une ligne comme <code>uid=1000(admin) gid=1000(admin) …</code>. Retenez les deux nombres : ils remplaceront <code>1000</code> dans les réglages <code>PUID</code> et <code>PGID</code> des deux étapes suivantes.</p>
+<hr>
+<h2 id="6-installer-chaptarr">6. Installer Chaptarr</h2>
+<p>Chaptarr n'est distribué qu'en image Docker. Si vous ne gérez pas de livres, sautez cette étape et ignorez tout ce qui le concerne dans la suite.</p>
+<pre data-langue="bash"><button class="copier" type="button">Copier</button><code>sudo mkdir -p /opt/chaptarr/config &amp;&amp; sudo chown -R $USER: /opt/chaptarr &amp;&amp; nano /opt/chaptarr/docker-compose.yml</code></pre>
+<p>Collez :</p>
+<pre data-langue="yaml"><button class="copier" type="button">Copier</button><code>services:
+  chaptarr:
+    image: chaptarr/chaptarr:latest
+    container_name: chaptarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - UMASK=002
+      - TZ=Europe/Paris
+    volumes:
+      - /opt/chaptarr/config:/config
+      - /mnt/nas/Multimedia/Audiobook:/mnt/nas/Multimedia/Audiobook
+      - /mnt/nas/Multimedia/Ebook:/mnt/nas/Multimedia/Ebook
+      - /mnt/nas/TorrentToDDL:/mnt/nas/TorrentToDDL
+    ports:
+      - &quot;8789:8789&quot;
+    restart: unless-stopped</code></pre>
+<p>Remplacez <code>1000</code> dans <code>PUID</code> et <code>PGID</code> par les deux nombres donnés par <code>id</code> (étape 5).</p>
+<p>Les dossiers ont <strong>le même chemin dans le conteneur que sur la VM</strong>. Chaptarr voit donc exactement les mêmes chemins que Radarr et Sonarr, et se règle exactement comme eux.</p>
+<pre data-langue="bash"><button class="copier" type="button">Copier</button><code>cd /opt/chaptarr &amp;&amp; docker compose up -d &amp;&amp; docker compose ps</code></pre>
+<p><strong>Résultat attendu</strong> : une ligne <code>chaptarr</code> avec l'état <code>Up</code>. Chaptarr est sur <code>http://192.168.1.20:8789</code> ; créez son identifiant comme pour les autres.</p>
+<hr>
+<h2 id="7-installer-torrenttoddl">7. Installer TorrentToDDL</h2>
+<p>Le code de TorrentToDDL et son image Docker sont publiés sur GitHub : <strong><a href="https://github.com/COMPTE_GITHUB/torrenttoddl" target="_blank" rel="noopener">https://github.com/COMPTE_GITHUB/torrenttoddl</a></strong>. L'installation n'en récupère que deux fichiers : le <code>docker-compose.yml</code> et le modèle de réglages.</p>
+<h3 id="71-recuperer-les-fichiers">7.1 Récupérer les fichiers</h3>
+<pre data-langue="bash"><button class="copier" type="button">Copier</button><code>sudo mkdir -p /opt/torrenttoddl &amp;&amp; sudo chown $USER: /opt/torrenttoddl &amp;&amp; cd /opt/torrenttoddl
+curl -fsSLO https://raw.githubusercontent.com/COMPTE_GITHUB/torrenttoddl/main/docker-compose.yml
+curl -fsSL https://raw.githubusercontent.com/COMPTE_GITHUB/torrenttoddl/main/.env.example -o .env
+mkdir donnees</code></pre>
+<p><code>donnees</code> contiendra la base de données. On le crée <strong>avant</strong> le premier démarrage pour qu'il vous appartienne : créé par Docker, il appartiendrait à <code>root</code>, et TorrentToDDL ne pourrait pas y écrire.</p>
+<h3 id="72-les-cles-api-des-arr">7.2 Les clés API des *arr</h3>
+<p>TorrentToDDL a besoin de la clé API de chaque *arr pour le prévenir quand il abandonne un torrent. Dans <strong>Radarr, Sonarr et Chaptarr</strong> : <strong>Settings &gt; General &gt; Security &gt; API Key</strong>, copiez la clé.</p>
+<h3 id="73-le-fichier-de-reglages">7.3 Le fichier de réglages</h3>
+<pre data-langue="bash"><button class="copier" type="button">Copier</button><code>nano /opt/torrenttoddl/.env</code></pre>
+<p>Remplissez :</p>
+<pre data-langue=""><button class="copier" type="button">Copier</button><code>ALLDEBRID_API_KEY=votre_cle_alldebrid
+DOSSIER_TORRENTS=/mnt/nas/TorrentToDDL/Torrents
+PUID=1000
+PGID=1000
+PORT=1455
+
+RADARR_URL=http://192.168.1.20:7878
+RADARR_API_KEY=cle_de_radarr
+SONARR_URL=http://192.168.1.20:8989
+SONARR_API_KEY=cle_de_sonarr
+CHAPTARR_URL=http://192.168.1.20:8789
+CHAPTARR_API_KEY=cle_de_chaptarr</code></pre>
+<p>Remplacez <code>1000</code> dans <code>PUID</code> et <code>PGID</code> par les deux nombres donnés par <code>id</code> (étape 5). Utilisez l'adresse de la VM, pas <code>localhost</code> : pour un conteneur, <code>localhost</code> désigne le conteneur lui-même. Sans Chaptarr, laissez ses deux lignes vides.</p>
+<p>Les autres réglages ont des valeurs par défaut qui conviennent ; ils sont décrits dans le fichier et <a href="#les-reglages">plus bas</a>.</p>
+<h3 id="74-laisser-le-conteneur-joindre-radarr-et-sonarr">7.4 Laisser le conteneur joindre Radarr et Sonarr</h3>
+<p>Radarr et Sonarr tournent directement sur la VM, et le pare-feu n'accepte que le réseau local. Or un conteneur Docker arrive avec une adresse en <code>172.x</code>. Il faut donc lui ouvrir leurs ports :</p>
+<pre data-langue="bash"><button class="copier" type="button">Copier</button><code>sudo ufw allow from 172.16.0.0/12 to any port 7878,8989 proto tcp</code></pre>
+<p>Chaptarr, lui, tourne dans Docker : pas de règle à ajouter.</p>
+<h3 id="75-demarrer">7.5 Démarrer</h3>
+<pre data-langue="bash"><button class="copier" type="button">Copier</button><code>cd /opt/torrenttoddl &amp;&amp; docker compose up -d &amp;&amp; docker compose logs torrenttoddl</code></pre>
+<p><strong>Résultat attendu</strong> :</p>
+<pre data-langue=""><button class="copier" type="button">Copier</button><code>torrenttoddl  | 16/11/2026 21:04:12 INFO    Radarr joint (version 6.3.0) : il sera prévenu des torrents abandonnés
+torrenttoddl  | 16/11/2026 21:04:12 INFO    Sonarr joint (version 4.0.19) : il sera prévenu des torrents abandonnés
+torrenttoddl  | 16/11/2026 21:04:12 INFO    Chaptarr joint (version 0.9.965.0) : il sera prévenu des torrents abandonnés
+torrenttoddl  | 16/11/2026 21:04:12 INFO    TorrentToDDL 1.0.0 : surveille /torrents, un passage toutes les 5 min, page d'état sur le port 8080
+torrenttoddl  | 16/11/2026 21:04:13 INFO    Passage terminé : 0 avancé(s) · 0 en échec · 0 en attente</code></pre>
+<p>Le port 8080 de la dernière ligne est celui <strong>du conteneur</strong> : depuis votre navigateur, la page est sur le port 1455.</p>
+<p>Ouvrez <strong><code>http://192.168.1.20:1455</code></strong> : la page d'état s'affiche, vide pour l'instant. Après quelques téléchargements, elle ressemble à ceci :</p>
+<figure><img src="images/page-etat.svg" alt="La page d'état de TorrentToDDL après quelques téléchargements" loading="lazy"><figcaption>La page d'état de TorrentToDDL après quelques téléchargements</figcaption></figure>
+<p>Le compose démarre aussi <strong>sqlite-web</strong>, sur <code>http://192.168.1.20:1456</code> : la base de données dans le navigateur, à la manière de phpMyAdmin.</p>
+<hr>
+<h2 id="8-configurer-prowlarr-et-les-indexeurs">8. Configurer Prowlarr et les indexeurs</h2>
+<p>Prowlarr est le carnet d'adresses des trois autres. On y déclare les indexeurs une seule fois, et il les recopie dans Radarr, Sonarr et Chaptarr, avec les bonnes catégories pour chacun (films, séries, livres…).</p>
+<h3 id="81-ajouter-des-indexeurs">8.1 Ajouter des indexeurs</h3>
+<p><strong>Indexers &gt; Add Indexer</strong>. Prowlarr en connaît plusieurs centaines. Utilisez les filtres en haut de la liste : <strong>Protocol</strong> sur <em>torrent</em>, <strong>Language</strong> pour trouver ceux de votre langue, <strong>Privacy</strong> pour distinguer :</p>
+<div class="tableau"><table><thead><tr><th>Type</th><th>Ce qu'il faut fournir</th><th>Remarque</th></tr></thead><tbody><tr><td><strong>Public</strong></td><td>rien</td><td>accessible à tous, plus ou moins fourni</td></tr><tr><td><strong>Semi-privé</strong></td><td>un compte gratuit</td><td>identifiant et mot de passe, parfois un cookie de session</td></tr><tr><td><strong>Privé</strong></td><td>un compte sur invitation</td><td>le plus souvent une clé API ou une <em>passkey</em>, à copier depuis votre profil sur le site</td></tr></tbody></table></div>
+<p>Pour chaque indexeur : remplissez les champs demandés, cliquez sur <strong>Test</strong> (coche verte attendue), puis <strong>Save</strong>.</p>
+<p>Deux réglages utiles dans la fiche d'un indexeur :</p>
+<ul><li><strong>Priority</strong> : de 1 (le plus prioritaire) à 50. À qualité égale, l'*arr préfère l'indexeur le plus prioritaire ;</li><li><strong>Tags</strong> : pour réserver un indexeur à certaines applications, en mettant le même tag sur l'application (voir 8.3).</li></ul>
+<blockquote><p>Certains sites sont protégés par Cloudflare et refusent les requêtes automatiques. Prowlarr le signale à l'ajout. Il faut alors un intermédiaire appelé FlareSolverr (<strong>Settings &gt; Indexers &gt; Indexer Proxies</strong>). Je ne le détaille pas ici : les indexeurs qui en ont besoin changent souvent.</p></blockquote>
+<h3 id="82-verifier-quun-indexeur-repond">8.2 Vérifier qu'un indexeur répond</h3>
+<p>Menu <strong>Search</strong> : tapez le nom d'une distribution Linux, par exemple <code>debian</code>, et lancez la recherche.</p>
+<p><strong>Résultat attendu</strong> : une liste de résultats, avec l'indexeur, la taille et le nombre de <em>seeders</em> de chacun.</p>
+<h3 id="83-relier-prowlarr-aux-trois-arr">8.3 Relier Prowlarr aux trois *arr</h3>
+<p><strong>Settings &gt; Apps &gt; +</strong>, une fois pour chaque *arr, avec sa clé API (copiée à l'étape 7.2) :</p>
+<div class="tableau"><table><thead><tr><th>Application</th><th>Type à choisir</th><th>Prowlarr Server</th><th>Adresse de l'application</th></tr></thead><tbody><tr><td>Radarr</td><td>Radarr</td><td><code>http://localhost:9696</code></td><td><code>http://localhost:7878</code></td></tr><tr><td>Sonarr</td><td>Sonarr</td><td><code>http://localhost:9696</code></td><td><code>http://localhost:8989</code></td></tr><tr><td>Chaptarr</td><td>Readarr</td><td><code>http://localhost:9696</code></td><td><code>http://localhost:8789</code></td></tr></tbody></table></div>
+<p>Laissez <strong>Sync Level</strong> sur <strong>Full Sync</strong> : Prowlarr ajoute, modifie et retire lui-même les indexeurs dans chaque application. Cliquez sur <strong>Test</strong>, puis <strong>Save</strong>.</p>
+<p><strong>Résultat attendu</strong> : quelques secondes plus tard, vos indexeurs apparaissent dans <strong>Settings &gt; Indexers</strong> de Radarr, de Sonarr et de Chaptarr, avec une mention <em>(Prowlarr)</em>. Ne les modifiez pas là-bas : faites-le toujours dans Prowlarr.</p>
+<h3 id="84-les-profils-de-synchronisation">8.4 Les profils de synchronisation</h3>
+<p><strong>Settings &gt; Apps &gt; Sync Profiles</strong> règle ce que les *arr ont le droit de faire avec les indexeurs. Le profil <em>Standard</em> convient :</p>
+<div class="tableau"><table><thead><tr><th>Option</th><th>Rôle</th></tr></thead><tbody><tr><td>Enable RSS</td><td>l'*arr surveille les nouveautés des indexeurs, toutes les 15 minutes environ, et prend tout seul ce que vous attendez</td></tr><tr><td>Enable Automatic Search</td><td>il cherche dès que vous ajoutez un film, une série ou un livre</td></tr><tr><td>Enable Interactive Search</td><td>vous pouvez chercher à la main et choisir une version</td></tr><tr><td>Minimum Seeders</td><td>en dessous, la release est ignorée. Mettez au moins <strong>1</strong> : un torrent sans source finit en erreur chez AllDebrid</td></tr></tbody></table></div>
+<hr>
+<h2 id="9-configurer-radarr-sonarr-et-chaptarr">9. Configurer Radarr, Sonarr et Chaptarr</h2>
+<p>La configuration est rapide : une dizaine de minutes par *arr, et la plupart des réglages sont identiques. Seuls les profils de qualité, l'ajout d'un média et quelques options propres aux films et aux séries diffèrent. Je donne chaque réglage une seule fois, avec un tableau quand les valeurs diffèrent, et j'indique en tête de chaque partie quels *arr elle concerne.</p>
+<blockquote><p><strong>Chaptarr : livres audio et ebooks.</strong> Chaptarr gère les deux formats dans la même application. Chacun a son dossier racine (<code>Audiobook</code> et <code>Ebook</code>, étape 9.1) et son profil tout prêt : <em>Audiobook</em> pour les livres audio (M4B, MP3, FLAC) et <em>E-Book</em> pour les ebooks (AZW3, EPUB, MOBI, PDF). À l'ajout d'un auteur, vous choisissez livre audio, ebook, ou les deux.</p></blockquote>
+<h3 id="91-les-dossiers-racine">9.1 Les dossiers racine</h3>
+<p><em>Concerne : Radarr, Sonarr et Chaptarr.</em></p>
+<p>C'est là que l'*arr range la médiathèque. <strong>Settings &gt; Media Management &gt; Root Folders &gt; Add Root Folder</strong> :</p>
+<div class="tableau"><table><thead><tr><th>Application</th><th>Dossier(s) racine</th></tr></thead><tbody><tr><td>Radarr</td><td><code>/mnt/nas/Multimedia/Films/</code></td></tr><tr><td>Sonarr</td><td><code>/mnt/nas/Multimedia/Series/</code> et <code>/mnt/nas/Multimedia/Animes/</code></td></tr><tr><td>Chaptarr</td><td><code>/mnt/nas/Multimedia/Audiobook/</code> et <code>/mnt/nas/Multimedia/Ebook/</code></td></tr></tbody></table></div>
+<h3 id="92-le-renommage">9.2 Le renommage</h3>
+<p><em>Concerne : Radarr, Sonarr et Chaptarr.</em></p>
+<p>Sur la même page, cochez <strong>Rename Movies</strong> (Radarr), <strong>Rename Episodes</strong> (Sonarr) ou <strong>Rename Books</strong> (Chaptarr). Les noms par défaut sont propres, et Plex reconnaît sans réglage ceux des films et des séries.</p>
+<h3 id="93-le-client-de-telechargement-torrent-blackhole">9.3 Le client de téléchargement : Torrent Blackhole</h3>
+<p><em>Concerne : Radarr, Sonarr et Chaptarr.</em></p>
+<p>C'est le branchement sur TorrentToDDL. <strong>Settings &gt; Download Clients &gt; + &gt; Torrent Blackhole</strong>, avec <strong>les mêmes valeurs dans les trois *arr</strong> :</p>
+<div class="tableau"><table><thead><tr><th>Champ</th><th>Valeur</th></tr></thead><tbody><tr><td>Name</td><td><code>TorrentToDDL</code></td></tr><tr><td>Torrent Folder</td><td><code>/mnt/nas/TorrentToDDL/Torrents/</code></td></tr><tr><td>Watch Folder</td><td><code>/mnt/nas/TorrentToDDL/Downloaded/</code></td></tr><tr><td>Save Magnet Files</td><td>coché</td></tr><tr><td>Save Magnet Files Extension</td><td><code>.magnet</code></td></tr></tbody></table></div>
+<p>Cliquez sur <strong>Test</strong> (coche verte attendue), puis <strong>Save</strong>.</p>
+<ul><li><strong>Torrent Folder</strong> : là où l'*arr dépose le <code>.torrent</code> qu'il a choisi, et où TorrentToDDL va le chercher.</li><li><strong>Watch Folder</strong> : là où Download Station dépose les fichiers, et où l'*arr les attend pour les importer.</li><li><strong>Save Magnet Files</strong> : certains indexeurs ne fournissent qu'un lien magnet, sans fichier <code>.torrent</code>. L'*arr l'écrit alors dans un petit fichier <code>.magnet</code>, que TorrentToDDL sait aussi envoyer à AllDebrid.</li></ul>
+<h3 id="94-la-gestion-des-echecs">9.4 La gestion des échecs</h3>
+<p><em>Concerne : Radarr, Sonarr et Chaptarr.</em></p>
+<p>Sur la même page, section <strong>Failed Download Handling</strong> : vérifiez que <strong>Redownload</strong> est coché (c'est le réglage par défaut). C'est ce qui permet à l'*arr de chercher une autre version quand TorrentToDDL abandonne un torrent.</p>
+<h3 id="95-les-profils-de-qualite">9.5 Les profils de qualité</h3>
+<p><em>Concerne : Radarr, Sonarr et Chaptarr.</em></p>
+<p><strong>Settings &gt; Profiles</strong> : chaque *arr a des profils tout prêts. Un profil dit quelles qualités l'*arr accepte, laquelle il préfère, et à partir de laquelle il arrête de chercher mieux (<strong>Upgrade Until</strong>).</p>
+<div class="tableau"><table><thead><tr><th>Application</th><th>Profils tout prêts</th></tr></thead><tbody><tr><td>Radarr, Sonarr</td><td><em>HD-1080p</em>, <em>Ultra-HD</em>…</td></tr><tr><td>Chaptarr</td><td><em>Audiobook</em> (M4B, MP3, FLAC) et <em>E-Book</em> (AZW3, EPUB, MOBI, PDF)</td></tr></tbody></table></div>
+<p><strong>Rien à créer ici</strong> : vous choisirez un profil à chaque ajout d'un média (étape 9.8). Le seul changement à faire dans un profil est la préférence pour le français, juste après.</p>
+<h3 id="96-preferer-les-versions-francaises">9.6 Préférer les versions françaises</h3>
+<p><em>Concerne : Radarr et Sonarr seulement.</em></p>
+<p>Par défaut, les *arr ne regardent pas la langue. Pour qu'ils préfèrent les versions françaises ou multilingues, on crée un <strong>format personnalisé</strong>, dans Radarr puis dans Sonarr.</p>
+<p><strong>Settings &gt; Custom Formats &gt; +</strong> :</p>
+<ul><li><strong>Name</strong> : <code>Français</code></li><li><strong>Conditions &gt; + &gt; Release Title</strong> :<ul><li>Name : <code>VF ou MULTi</code></li><li>Regular Expression : <code>\b(MULTI|VFF|VFQ|VFI|VF2|TRUEFRENCH|FRENCH)\b</code></li></ul></li></ul>
+<p><strong>Save</strong>, puis dans <strong>Settings &gt; Profiles</strong>, ouvrez le profil que vous utiliserez, par exemple <em>HD-1080p</em> :</p>
+<ul><li><strong>Custom Formats</strong> : donnez le score <strong>100</strong> à <code>Français</code> ;</li><li><strong>Language</strong> (Radarr seulement) : <strong>Any</strong>, le format personnalisé s'en charge ;</li><li><strong>Minimum Custom Format Score</strong> : <strong>0</strong> pour simplement préférer le français, <strong>1</strong> pour n'accepter <strong>que</strong> des versions françaises.</li></ul>
+<p><strong>Résultat attendu</strong> : dans une recherche manuelle, les releases françaises affichent <code>Français</code> dans la colonne des formats, et un score de 100.</p>
+<h3 id="97-ecarter-les-releases-inutilisables">9.7 Écarter les releases inutilisables</h3>
+<p><em>Concerne : Radarr et Sonarr seulement.</em></p>
+<p><strong>Settings &gt; Profiles &gt; Release Profiles &gt; +</strong>, <strong>Must Not Contain</strong> : <code>BDMV</code>. Ces disques Blu-ray complets contiennent des centaines de fichiers que l'*arr ne sait pas importer.</p>
+<h3 id="98-ajouter-un-premier-film-une-serie-un-livre">9.8 Ajouter un premier film, une série, un livre</h3>
+<p><em>Concerne : Radarr, Sonarr et Chaptarr.</em></p>
+<div class="tableau"><table><thead><tr><th></th><th>Radarr</th><th>Sonarr</th><th>Chaptarr</th></tr></thead><tbody><tr><td>Où</td><td><strong>Movies &gt; Add New</strong></td><td><strong>Series &gt; Add New</strong></td><td><strong>Authors &gt; Add New</strong></td></tr><tr><td>Root Folder</td><td><code>Films</code></td><td><code>Series</code>, ou <code>Animes</code> pour un animé</td><td><code>Audiobook</code> pour les livres audio, <code>Ebook</code> pour les ebooks</td></tr><tr><td>Quality Profile</td><td><em>HD-1080p</em>, par exemple</td><td><em>HD-1080p</em>, par exemple</td><td><em>Audiobook</em> et/ou <em>E-Book</em></td></tr><tr><td>Réglage propre</td><td><strong>Minimum Availability</strong> : <em>Released</em> (attend la sortie numérique)</td><td><strong>Series Type</strong> : <em>Anime</em> pour un animé (numérotation absolue des épisodes)</td><td>livre audio, ebook, ou les deux ; <strong>Monitor</strong> : les livres de l'auteur à surveiller</td></tr></tbody></table></div>
+<p>Cochez <strong>Start search for missing…</strong> avant de valider : l'*arr cherche aussitôt.</p>
+<p><strong>Pas encore sorti ?</strong> Ajoutez-le quand même. Il apparaît comme <em>manquant</em> et dans le <strong>Calendar</strong> de l'*arr ; dès qu'une version correspondant à votre profil paraît sur un indexeur, il la prend tout seul (c'est l'option <em>Enable RSS</em> des profils de synchronisation, étape 8.4). Pour une série, choisissez <strong>Monitor : Future Episodes</strong> si vous ne voulez que les prochains épisodes, ou <strong>All Episodes</strong> pour tout récupérer.</p>
+<h3 id="99-prevenir-plex">9.9 Prévenir Plex</h3>
+<p><em>Concerne : Radarr et Sonarr seulement.</em></p>
+<p>Plex tourne sur le NAS, là où arrivent les fichiers : il peut s'en apercevoir tout seul.</p>
+<ol><li>Dans Plex, créez une bibliothèque par type de média, chacune sur son dossier du NAS : <em>Films</em> sur <code>Multimedia/Films</code>, <em>Séries</em> sur <code>Multimedia/Series</code> et <code>Multimedia/Animes</code>.</li><li><strong>Paramètres &gt; Bibliothèque</strong> : cochez <strong>Analyser ma bibliothèque automatiquement</strong> (et <strong>Lancer une analyse partielle quand des changements sont détectés</strong>).</li></ol>
+<p><strong>Résultat attendu</strong> : quelques instants après chaque import par Radarr ou Sonarr, le nouveau film ou épisode apparaît dans Plex.</p>
+<p>Pour les retardataires, Radarr et Sonarr peuvent aussi prévenir Plex directement : <strong>Settings &gt; Connect &gt; + &gt; Plex Media Server</strong>, adresse du NAS, port <code>32400</code>, puis <strong>Authenticate with Plex.tv</strong> et <strong>Update Library</strong> coché.</p>
+<hr>
+<h2 id="10-brancher-download-station">10. Brancher Download Station</h2>
+<p>Dans Download Station :</p>
+<ol><li><strong>Paramètres &gt; Emplacement</strong> : choisissez <code>TorrentToDDL/Downloaded</code> comme destination par défaut.</li><li><strong>RSS</strong> (icône de flux dans la colonne de gauche) <strong>&gt; Ajouter</strong> :<ul><li>URL : <code>http://192.168.1.20:1455/rss</code> ;</li><li>cochez le <strong>téléchargement automatique des nouveaux éléments</strong>.</li></ul></li><li><strong>Paramètres &gt; RSS</strong> : réglez l'intervalle de mise à jour du flux, par exemple toutes les 15 minutes.</li></ol>
+<p>Le flux contient toujours un élément « Initialisation RSS », sans lien : il permet à Download Station d'accepter le flux même quand il est vide. Ignorez-le.</p>
+<hr>
+<h2 id="11-le-premier-test-de-bout-en-bout">11. Le premier test, de bout en bout</h2>
+<p>Dans Radarr, Sonarr ou Chaptarr, ajoutez quelque chose que vous avez le droit de télécharger, puis lancez une <strong>recherche manuelle</strong> (icône de personne) et choisissez une release. Voici ce qui doit se passer :</p>
+<div class="tableau"><table><thead><tr><th>Quand</th><th>Où regarder</th><th>Ce que vous devez voir</th></tr></thead><tbody><tr><td>tout de suite</td><td>l'*arr &gt; Activity &gt; History</td><td>une ligne <strong>Grabbed</strong></td></tr><tr><td>au passage suivant (5 min au plus)</td><td>page d'état</td><td>le torrent <strong>Sur AllDebrid</strong></td></tr><tr><td>de quelques secondes à quelques heures</td><td>page d'état</td><td>le torrent <strong>Dans le flux RSS</strong>, avec ses liens</td></tr><tr><td>à la prochaine lecture du flux</td><td>Download Station</td><td>le téléchargement démarre dans <code>Downloaded</code></td></tr><tr><td>une fois le fichier arrivé</td><td>l'*arr &gt; Activity &gt; History</td><td>une ligne <strong>Imported</strong> : le fichier est rangé dans la médiathèque</td></tr><tr><td>2 jours plus tard</td><td>page d'état</td><td>le torrent passe en <strong>Terminé</strong></td></tr></tbody></table></div>
+<p>Pour ne pas attendre les 5 minutes, cliquez sur <strong>Lancer un passage</strong> sur la page d'état.</p>
+<p>Le détail de chaque passage s'affiche en bas de la page. Pour un premier téléchargement, quelque chose comme :</p>
+<pre data-langue=""><button class="copier" type="button">Copier</button><code>▸ Réception · 1
+  ✔ Ma.Release.1080p.WEB
+      reçu
+
+▸ Envoi sur AllDebrid · 1
+  ✔ Ma.Release.1080p.WEB
+      envoyé sur AllDebrid (id 851885288)
+
+▸ Suivi sur AllDebrid · 1
+  ✔ Ma.Release.1080p.WEB
+      1 lien(s) publié(s) dans le flux RSS
+
+Rien à traiter : Relance des erreurs, Historisation
+3 avancé(s) · 0 en échec · 0 en attente</code></pre>
+<p>Faites ce test une fois avec chacun des trois *arr. Leurs réglages sont identiques, mais vous les avez saisis trois fois : une erreur dans l'un d'eux, un chemin mal tapé dans Torrent Blackhole par exemple, ne se verrait sinon qu'au premier vrai téléchargement.</p>
+<hr>
+<h2 id="au-quotidien">Au quotidien</h2>
+<h3 id="la-page-detat">La page d'état</h3>
+<div class="tableau"><table><thead><tr><th>Élément</th><th>Rôle</th></tr></thead><tbody><tr><td>Compteurs</td><td>le nombre de torrents dans chaque état</td></tr><tr><td>Tableau</td><td>chaque torrent, son état, ce qu'en dit AllDebrid, le nombre de liens, les dates, et un message en cas de problème</td></tr><tr><td><strong>Lancer un passage</strong></td><td>ne pas attendre les 5 minutes</td></tr><tr><td><strong>Supprimer</strong></td><td>retire un torrent d'AllDebrid, de la base et du flux RSS, après confirmation</td></tr><tr><td>Dernier passage</td><td>le détail de ce qui vient de se passer</td></tr></tbody></table></div>
+<p><strong>Supprimer</strong> ne prévient pas l'*arr. Pour remplacer une release, supprimez-la aussi de sa file d'attente (<strong>Activity &gt; Queue</strong>, en cochant <em>Blocklist</em>), puis relancez une recherche.</p>
+<h3 id="piloter-depuis-le-telephone-avec-nzb360">Piloter depuis le téléphone avec nzb360</h3>
+<p>Une fois la chaîne en place, on n'ouvre presque plus les interfaces web. Sur Android, <strong>nzb360</strong> réunit Radarr, Sonarr, Chaptarr et Prowlarr dans une seule application, et c'est celle que j'utilise au quotidien. On y fait, du bout du doigt :</p>
+<ul><li><strong>ajouter</strong> un film, une série ou un auteur : une recherche, un profil de qualité, et l'*arr s'occupe du reste ;</li><li>consulter le <strong>calendrier</strong> des prochaines sorties de tous les *arr à la fois ;</li><li>suivre la <strong>file d'attente</strong> et l'<strong>historique</strong> de chacun, pour voir où en est un téléchargement ;</li><li>lancer une <strong>recherche manuelle</strong> et choisir soi-même une release, quand la version choisie d'office ne convient pas ;</li><li>interroger <strong>tous les indexeurs</strong> d'un coup, par Prowlarr.</li></ul>
+<p><strong>Configuration</strong> : dans nzb360, ajoutez chaque service avec son adresse et sa clé API, les mêmes qu'à l'étape 7.2 (<strong>Settings &gt; General &gt; Security &gt; API Key</strong> dans chaque *arr).</p>
+<div class="tableau"><table><thead><tr><th>Service</th><th>Type dans nzb360</th><th>Adresse</th></tr></thead><tbody><tr><td>Radarr</td><td>Radarr</td><td><code>http://192.168.1.20:7878</code></td></tr><tr><td>Sonarr</td><td>Sonarr</td><td><code>http://192.168.1.20:8989</code></td></tr><tr><td>Chaptarr</td><td>Chaptarr</td><td><code>http://192.168.1.20:8789</code></td></tr><tr><td>Prowlarr</td><td>Prowlarr</td><td><code>http://192.168.1.20:9696</code></td></tr></tbody></table></div>
+<p>nzb360 connaît Chaptarr en tant que tel : ses livres et livres audio s'affichent comme les films et les séries.</p>
+<p><strong>Résultat attendu</strong> : chaque service affiche sa bibliothèque, et le calendrier se remplit des prochaines sorties.</p>
+<p>nzb360 n'existe que sur Android. L'application est gratuite à installer, mais limitée tant qu'on ne paie pas : on débloque à vie les services dont on se sert (<em>Lifetime Unlocks</em>), ou on prend l'abonnement <em>All Access</em>, qui ouvre tout et donne accès aux versions de test. Les prix sont affichés dans l'application. Les anciens acheteurs de la version <em>Pro</em>, l'ancien modèle à achat unique, ont gardé leurs fonctions.</p>
+<p><strong>Hors de chez vous</strong> : ces adresses ne répondent que sur votre réseau local, et c'est très bien ainsi. N'ouvrez pas les ports des *arr sur votre box : leurs interfaces ne sont pas faites pour être exposées sur Internet. Pour les piloter de l'extérieur, passez par un VPN (celui de votre box, WireGuard ou Tailscale) : une fois connecté, nzb360 fonctionne comme à la maison.</p>
+<h3 id="deposer-un-torrent-a-la-main">Déposer un torrent à la main</h3>
+<p>Déposez le <code>.torrent</code> dans le dossier partagé <code>TorrentToDDL/Torrents</code> du NAS, depuis File Station ou le partage réseau de votre PC. Il part au passage suivant. Un fichier n'est pris que 10 secondes après sa dernière modification : une copie lente ne pose pas de problème. Aucun *arr ne l'ayant demandé, c'est à vous de ranger le fichier une fois arrivé dans <code>Downloaded</code>.</p>
+<h3 id="la-base-de-donnees">La base de données</h3>
+<p>Un seul fichier : <code>/opt/torrenttoddl/donnees/torrenttoddl.db</code>.</p>
+<ul><li><strong>Dans le navigateur</strong> : <code>http://192.168.1.20:1456</code> (sqlite-web).</li><li><strong>En ligne de commande</strong> :</li></ul>
+<pre data-langue="bash"><button class="copier" type="button">Copier</button><code>sqlite3 -box /opt/torrenttoddl/donnees/torrenttoddl.db &quot;SELECT id, etat, statut_alldebrid, nom FROM torrents;&quot;</code></pre>
+<ul><li><strong>Repartir de zéro</strong> :</li></ul>
+<pre data-langue="bash"><button class="copier" type="button">Copier</button><code>cd /opt/torrenttoddl &amp;&amp; docker compose down &amp;&amp; rm -rf donnees/* &amp;&amp; docker compose up -d</code></pre>
+<h3 id="les-journaux">Les journaux</h3>
+<pre data-langue="bash"><button class="copier" type="button">Copier</button><code>cd /opt/torrenttoddl &amp;&amp; docker compose logs -f torrenttoddl</code></pre>
+<p>Ctrl+C pour quitter. Un passage sans événement tient sur une ligne ; un passage où quelque chose bouge affiche son détail.</p>
+<h3 id="mettre-a-jour">Mettre à jour</h3>
+<pre data-langue="bash"><button class="copier" type="button">Copier</button><code>cd /opt/torrenttoddl &amp;&amp; docker compose pull &amp;&amp; docker compose up -d</code></pre>
+<p>Même commande pour Chaptarr, dans <code>/opt/chaptarr</code>. Radarr, Sonarr et Prowlarr se mettent à jour depuis leur propre interface (<strong>System &gt; Updates</strong>).</p>
+<h3 id="les-reglages">Les réglages</h3>
+<p>Dans <code>/opt/torrenttoddl/.env</code>, puis <code>docker compose up -d</code> pour les appliquer :</p>
+<div class="tableau"><table><thead><tr><th>Variable</th><th>Par défaut</th><th>Rôle</th></tr></thead><tbody><tr><td><code>INTERVALLE_MINUTES</code></td><td><code>5</code></td><td>temps entre deux passages</td></tr><tr><td><code>CONSERVER_JOURS</code></td><td><code>2</code></td><td>durée des liens dans le flux RSS, avant suppression d'AllDebrid</td></tr><tr><td><code>ABANDON_JOURS</code></td><td><code>1</code></td><td>durée en erreur avant d'abandonner un torrent, comptée depuis la première erreur</td></tr><tr><td><code>HISTORIQUE_JOURS</code></td><td><code>7</code></td><td>durée d'affichage d'un torrent terminé, refusé ou abandonné</td></tr><tr><td><code>TZ</code></td><td><code>Europe/Paris</code></td><td>fuseau des heures affichées</td></tr></tbody></table></div>
+<p>Si votre NAS est éteint la nuit, augmentez <code>CONSERVER_JOURS</code> : Download Station doit avoir le temps de télécharger.</p>
+<h3 id="sauvegarder">Sauvegarder</h3>
+<p>Ce qui ne se reconstruit pas :</p>
+<div class="tableau"><table><thead><tr><th>Chemin</th><th>Contenu</th></tr></thead><tbody><tr><td><code>/var/lib/prowlarr</code>, <code>/var/lib/radarr</code>, <code>/var/lib/sonarr</code></td><td>réglages et bibliothèques de Prowlarr, Radarr et Sonarr</td></tr><tr><td><code>/opt/chaptarr/config</code></td><td>réglages et bibliothèque de Chaptarr</td></tr><tr><td><code>/opt/torrenttoddl/.env</code> et <code>donnees/</code></td><td>réglages et base de TorrentToDDL</td></tr></tbody></table></div>
+<p>Le plus simple : sauvegarder toute la VM avec la fonction de sauvegarde de Virtual Machine Manager, ou Hyper Backup, vers un disque externe. Chaque *arr fait aussi ses propres sauvegardes, dans <strong>System &gt; Backup</strong>.</p>
+<hr>
+<h2 id="depannage">Dépannage</h2>
+<div class="tableau"><table><thead><tr><th>Symptôme</th><th>Cause probable</th><th>Solution</th></tr></thead><tbody><tr><td>Un torrent déposé ne bouge pas, les passages disent « 0 en attente »</td><td>TorrentToDDL surveille un autre dossier</td><td><code>grep DOSSIER_TORRENTS /opt/torrenttoddl/.env</code>, corriger, puis <code>docker compose up -d</code> (un simple redémarrage ne suffit pas)</td></tr><tr><td><code>droits insuffisants sur le dossier surveillé</code></td><td>TorrentToDDL ne peut pas retirer les fichiers du dossier : le NAS refuse d'écrire pour la VM</td><td>dans les autorisations NFS des deux dossiers partagés (étape 1.3), vérifier que <strong>Squash</strong> vaut bien <strong>Mapper tous les utilisateurs sur admin</strong></td></tr><tr><td><code>unable to open database file</code> au démarrage</td><td><code>donnees/</code> appartient à <code>root</code></td><td><code>sudo chown -R $USER: /opt/torrenttoddl/donnees</code>, puis <code>docker compose restart</code></td></tr><tr><td>Après un redémarrage, plus rien n'arrive</td><td>le partage NFS n'était pas encore prêt quand la VM a démarré : les conteneurs voient des dossiers vides</td><td><code>sudo mount -a</code>, puis <code>docker compose restart</code> dans <code>/opt/torrenttoddl</code> et <code>/opt/chaptarr</code></td></tr><tr><td>Le test du client Torrent Blackhole échoue dans un *arr</td><td>le dossier n'existe pas ou n'est pas accessible</td><td>vérifier les montages (étape 3) ; pour Chaptarr, les volumes de son <code>docker-compose.yml</code></td></tr><tr><td>Aucun indexeur dans un *arr</td><td>l'application n'est pas reliée dans Prowlarr</td><td><strong>Settings &gt; Apps</strong> de Prowlarr : <strong>Test</strong>, puis <strong>Sync App Indexers</strong></td></tr><tr><td><code>Radarr injoignable</code> dans le journal</td><td>la règle du pare-feu de l'étape 7.4 manque, ou l'adresse est fausse</td><td><code>sudo ufw status</code>, vérifier <code>RADARR_URL</code> (idem pour Sonarr)</td></tr><tr><td><code>Sonarr refuse la clé API</code></td><td>clé mal copiée, ou régénérée depuis</td><td>la recopier dans <code>.env</code>, puis <code>docker compose up -d</code></td></tr><tr><td><code>Chaptarr a répondu HTTP 404</code></td><td>une autre version d'API</td><td>ajouter <code>CHAPTARR_API=v1</code> (ou la version indiquée par Chaptarr) dans <code>.env</code></td></tr><tr><td><code>Erreur AllDebrid : AUTH_BAD_APIKEY</code></td><td>clé AllDebrid invalide</td><td>la recopier depuis alldebrid.com</td></tr><tr><td>« limite de torrents actifs atteinte »</td><td>AllDebrid accepte 30 torrents actifs au plus</td><td>rien à faire : les suivants partent dès qu'une place se libère</td></tr><tr><td>Un torrent reste « En erreur »</td><td>aucune source ne le partage</td><td>rien à faire : il est abandonné au bout d'un jour, et l'*arr cherche une autre version</td></tr><tr><td>Download Station ne télécharge rien</td><td>flux mal saisi, ou téléchargement automatique décoché</td><td>ouvrir <code>http://192.168.1.20:1455/rss</code> dans un navigateur : les liens doivent y figurer</td></tr><tr><td>Le fichier est téléchargé mais jamais importé</td><td>Watch Folder différent de la destination de Download Station, ou release <code>BDMV</code></td><td>vérifier les deux chemins ; écarter <code>BDMV</code> (étape 9.7)</td></tr></tbody></table></div>
+<hr>
+<h2 id="limites-et-alternatives">Limites et alternatives</h2>
+<p>TorrentToDDL est volontairement simple. Ses limites :</p>
+<ul><li><strong>Les *arr ne voient pas la progression.</strong> Avec Torrent Blackhole, ils voient seulement le fichier arriver, ou l'échec quand TorrentToDDL abandonne un torrent. Pas de barre de progression dans leur file d'attente.</li><li><strong>Le délai dépend de Download Station</strong>, qui ne relit le flux qu'à intervalle régulier.</li><li><strong>Un seul service de débridage</strong> : AllDebrid.</li><li><strong>Pas de mot de passe</strong> sur la page d'état ni sur sqlite-web : ils sont faits pour un réseau local. Ne les publiez jamais sur Internet, ni par une redirection de port, ni par un reverse proxy.</li><li><strong>Tous les fichiers du torrent sont téléchargés</strong>, y compris les <code>.nfo</code> et les extraits. Les *arr les ignorent à l'import, mais ils restent dans <code>Downloaded</code> : un nettoyage régulier de ce dossier est utile.</li></ul>
+<h3 id="et-sans-synology">Et sans Synology ?</h3>
+<p>L'alternative la plus connue s'appelle <strong>RDT-Client</strong>. Il fait le même pont entre les *arr et un service de débridage, mais autrement :</p>
+<div class="tableau"><table><thead><tr><th></th><th>TorrentToDDL</th><th>RDT-Client</th></tr></thead><tbody><tr><td>Comment les *arr lui parlent</td><td>client Torrent Blackhole : un dossier</td><td>il se fait passer pour <strong>qBittorrent</strong> : les *arr le pilotent comme un vrai client BitTorrent</td></tr><tr><td>Qui télécharge les fichiers chez vous</td><td>Download Station, sur le NAS</td><td>RDT-Client lui-même, sur la machine où il tourne</td></tr><tr><td>Progression visible dans les *arr</td><td>non</td><td>oui</td></tr><tr><td>Services de débridage</td><td>AllDebrid</td><td>AllDebrid, Real-Debrid, Premiumize, TorBox…</td></tr><tr><td>Pour qui</td><td>ceux qui ont un Synology et veulent que le NAS fasse le travail</td><td>tout le monde, NAS ou pas</td></tr></tbody></table></div>
+<p>Si vous n'avez pas de Synology, ou si la progression dans les *arr compte pour vous, RDT-Client est le bon choix. TorrentToDDL, lui, mise sur la simplicité et sur un outil que beaucoup ont déjà : Download Station.</p>
+<hr>
+<h2 id="sous-le-capot">Sous le capot</h2>
+<p>Pour les curieux, TorrentToDDL tient en quelques centaines de lignes de Python :</p>
+<div class="tableau"><table><thead><tr><th>Fichier</th><th>Rôle</th></tr></thead><tbody><tr><td><code>alldebrid.py</code></td><td>le client de l'API AllDebrid</td></tr><tr><td><code>arr.py</code></td><td>prévenir Radarr, Sonarr ou Chaptarr d'un échec</td></tr><tr><td><code>base.py</code></td><td>la base SQLite : un torrent par ligne</td></tr><tr><td><code>passage.py</code></td><td>les étapes d'un passage, et le moteur qui les lance toutes les 5 minutes</td></tr><tr><td><code>web.py</code></td><td>la page d'état et le flux RSS</td></tr></tbody></table></div>
+<p>Une cinquantaine de tests automatiques simulent AllDebrid et les *arr. Ils tournent à chaque nouvelle version, avant la publication de l'image Docker.</p>
+<p>Les remarques et les améliorations sont les bienvenues sur GitHub.</p>
+<p><em>Les logos des schémas viennent de la collection dashboard-icons et restent la propriété de leurs détenteurs respectifs : Synology, Plex, Canonical, Docker, et les projets Prowlarr, Radarr, Sonarr, Chaptarr et SQLite. AllDebrid et TorrentToDDL sont représentés par des pictogrammes dessinés pour l'article. Les écrans de Plex, du téléphone, du calendrier et de la page d'état sont des illustrations, pas des captures : les films sont ceux, libres, du Blender Institute, les autres torrents sont des distributions Linux, et les séries et les livres sont imaginaires.</em></p>
+      </article>
+    </div>
+  </div>
+</main>
+<footer class="pied">
+  <div class="conteneur">
+    <span>© <span data-annee>2026</span> DataAIrplane · dataairplane.com</span>
+    <span><a href="../../index.html">Accueil</a> · <a href="../../outils.html">Outils</a> · <a href="../../cv.html">CV</a> · <a href="https://github.com/DataAIrplane" target="_blank" rel="noopener">GitHub</a></span>
+  </div>
+</footer>
+<script src="../../assets/js/donnees.js"></script>
+<script src="../../assets/js/reseau.js"></script>
+<script src="../../assets/js/main.js"></script>
+<script src="../../assets/js/guide.js"></script>
+</body>
+</html>
