@@ -113,24 +113,6 @@
   window.observerApparitions = observer;
   observer();
 
-  // ---------- Cartes : lueur qui suit la souris + légère inclinaison ----------
-  document.addEventListener("pointermove", function (e) {
-    var c = e.target.closest && e.target.closest(".carte");
-    if (!c || c.classList.contains("fantome")) return;
-    var r = c.getBoundingClientRect();
-    var x = e.clientX - r.left, y = e.clientY - r.top;
-    c.style.setProperty("--mx", x + "px");
-    c.style.setProperty("--my", y + "px");
-    if (!calme && e.pointerType === "mouse") {
-      var rx = ((y / r.height) - 0.5) * -5, ry = ((x / r.width) - 0.5) * 5;
-      c.style.transform = "perspective(900px) rotateX(" + rx + "deg) rotateY(" + ry + "deg) translateY(-3px)";
-    }
-  });
-  document.addEventListener("pointerout", function (e) {
-    var c = e.target.closest && e.target.closest(".carte");
-    if (c && !c.contains(e.relatedTarget)) c.style.transform = "";
-  });
-
   // ---------- Texte « tapé » ----------
   document.querySelectorAll("[data-tape]").forEach(function (el) {
     var mots = JSON.parse(el.getAttribute("data-tape"));

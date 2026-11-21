@@ -16,12 +16,12 @@
   var initiales = (P.nom || "DA").match(/[A-Z]/g) || ["D", "A"];
   $("cv-initiales").textContent = initiales.slice(0, 2).join("");
   $("cv-accroche").textContent = P.accroche || "";
-  $("cv-titre").setAttribute("data-tape", JSON.stringify([P.titre || ""].concat((P.motsCles || []).map(function (m) { return "Passionné par " + m; }))));
+  $("cv-titre").textContent = P.titre || "";
   var contacts = [];
   if (P.github) contacts.push('<a class="btn" href="' + e(P.github) + '" target="_blank" rel="noopener">GitHub ↗</a>');
   if (P.linkedin) contacts.push('<a class="btn" href="' + e(P.linkedin) + '" target="_blank" rel="noopener">LinkedIn ↗</a>');
   if (P.email) contacts.push('<a class="btn principal" href="mailto:' + e(P.email) + '">Me contacter</a>');
-  if (P.localisation) contacts.push('<span class="btn" aria-disabled="false" style="cursor:default">📍 ' + e(P.localisation) + "</span>");
+  if (P.localisation) contacts.push('<span class="btn info">' + e(P.localisation) + "</span>");
   $("cv-contacts").innerHTML = contacts.join("");
 
   // ---------- Compétences ----------

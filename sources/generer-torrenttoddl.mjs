@@ -135,8 +135,6 @@ const page = `<!DOCTYPE html>
 <body class="page-outil">
 <!-- Page générée par sources/generer-torrenttoddl.mjs : modifier l'article, pas ce fichier. -->
 <div class="lecture" aria-hidden="true"><i></i></div>
-<canvas id="reseau" aria-hidden="true"></canvas>
-<div class="halo a" aria-hidden="true"></div><div class="halo b" aria-hidden="true"></div><div class="grille" aria-hidden="true"></div>
 <header class="nav">
   <nav class="nav-in" aria-label="Navigation principale">
     <a class="logo" href="${P}index.html">__LOGO__<span>Data<b>AI</b>rplane</span></a>
@@ -193,13 +191,13 @@ ${html.join("\n")}
   </div>
 </footer>
 <script src="${P}assets/js/donnees.js"></script>
-<script src="${P}assets/js/reseau.js"></script>
 <script src="${P}assets/js/main.js"></script>
 <script src="${P}assets/js/guide.js"></script>
 </body>
 </html>
 `;
 
-const logo = readFileSync(join(racine, "favicon.svg"), "utf8").trim().replace(' xmlns="http://www.w3.org/2000/svg"', ' aria-hidden="true"');
+const logo = readFileSync(join(racine, "favicon.svg"), "utf8").trim()
+  .replace(' xmlns="http://www.w3.org/2000/svg"', ' aria-hidden="true"').replace(/#2563eb/g, "currentColor");
 writeFileSync(join(racine, "outils/torrenttoddl/index.html"), page.replace("__LOGO__", logo));
 console.log(`outils/torrenttoddl/index.html généré (${sections.length} sections)`);
